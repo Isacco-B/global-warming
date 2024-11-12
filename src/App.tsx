@@ -1,28 +1,109 @@
-import { Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "./components/theme-provider";
-import NoMatch from "./pages/NoMatch";
-import Layout from "./pages/layout";
-import Home from "./pages/home";
-import Temperature from "./pages/Temperature";
-import CO2 from "./pages/CO2";
-import Methane from "./pages/Methane";
-import NO2 from "./pages/NO2";
-import PolarIce from "./pages/PolarIce";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigation,
+  Outlet,
+} from "react-router-dom";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import {
+  fetchCO2Data,
+  fetchMethaneData,
+  fetchNitrousOxideData,
+  fetchPolarIceData,
+  fetchTemperatureData,
+} from "@/services/data";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SuspenseFallback } from "@/components/SuspenseFallback";
+import Layout from "@/pages/Layout";
+import TemperaturePage from "@/pages/TemperaturePage";
+import Co2Page from "@/pages/Co2Page";
+import HomePage from "@/pages/HomePage";
+import MethanePage from "@/pages/MethanePage";
+import No2Page from "@/pages/No2Page";
+import PolarIcePage from "@/pages/PolarIcePage";
+import NoMatch from "@/pages/NoMatchPage";
+
+function LoadingWrapper() {
+  const navigation = useNavigation();
+
+  if (navigation.state === "loading") {
+    return <SuspenseFallback />;
+  }
+
+  return <Outlet />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        element: <LoadingWrapper />,
+        children: [
+          { index: true, element: <HomePage /> },
+          {
+            path: "temperature",
+            element: <TemperaturePage />,
+            loader: async () => {
+              const data = await fetchTemperatureData();
+              return { data };
+            },
+            errorElement: (
+              <ErrorBoundary msg="Error fetching temperature data!" />
+            ),
+          },
+          {
+            path: "co2",
+            element: <Co2Page />,
+            loader: async () => {
+              const data = await fetchCO2Data();
+              return { data };
+            },
+            errorElement: <ErrorBoundary msg="Error fetching co2 data!" />,
+          },
+          {
+            path: "methane",
+            element: <MethanePage />,
+            loader: async () => {
+              const data = await fetchMethaneData();
+              return { data };
+            },
+            errorElement: <ErrorBoundary msg="Error fetching methane data!" />,
+          },
+          {
+            path: "nitrous-oxide",
+            element: <No2Page />,
+            loader: async () => {
+              const data = await fetchNitrousOxideData();
+              return { data };
+            },
+            errorElement: (
+              <ErrorBoundary msg="Error fetching nitrous oxide data!" />
+            ),
+          },
+          {
+            path: "polar-ice",
+            element: <PolarIcePage />,
+            loader: async () => {
+              const data = await fetchPolarIceData();
+              return { data };
+            },
+            errorElement: (
+              <ErrorBoundary msg="Error fetching polar ice data!" />
+            ),
+          },
+          { path: "*", element: <NoMatch /> },
+        ],
+      },
+    ],
+  },
+]);
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="temperature" element={<Temperature />} />
-          <Route path="co2" element={<CO2 />} />
-          <Route path="methane" element={<Methane />} />
-          <Route path="nitrous-oxide" element={<NO2 />} />
-          <Route path="polar-ice" element={<PolarIce />} />
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
