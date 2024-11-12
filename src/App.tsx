@@ -16,12 +16,12 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SuspenseFallback } from "@/components/SuspenseFallback";
 import Layout from "@/pages/Layout";
 import TemperaturePage from "@/pages/TemperaturePage";
-import Co2Page from "@/pages/Co2Page";
+import CarbonDioxidePage from "@/pages/CarbonDioxidePage";
 import HomePage from "@/pages/HomePage";
 import MethanePage from "@/pages/MethanePage";
-import No2Page from "@/pages/No2Page";
+import NitrousOxidePage from "@/pages/NitrousOxidePage";
 import PolarIcePage from "@/pages/PolarIcePage";
-import NoMatch from "@/pages/NoMatchPage";
+import NoMatchPage from "@/pages/NoMatchPage";
 
 function LoadingWrapper() {
   const navigation = useNavigation();
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
           },
           {
             path: "co2",
-            element: <Co2Page />,
+            element: <CarbonDioxidePage />,
             loader: async () => {
               const data = await fetchCO2Data();
               return { data };
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
           },
           {
             path: "nitrous-oxide",
-            element: <No2Page />,
+            element: <NitrousOxidePage />,
             loader: async () => {
               const data = await fetchNitrousOxideData();
               return { data };
@@ -93,7 +93,7 @@ const router = createBrowserRouter([
               <ErrorBoundary msg="Error fetching polar ice data!" />
             ),
           },
-          { path: "*", element: <NoMatch /> },
+          { path: "*", element: <NoMatchPage /> },
         ],
       },
     ],
