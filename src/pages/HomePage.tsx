@@ -9,7 +9,7 @@ export function HomePage() {
   useTitle("Home");
   return (
     <div className="flex flex-col min-h-[100dvh] space-y-10">
-      <section id="hero">
+      <section>
         <div className="mx-auto w-full space-y-8">
           <div className="flex-col flex flex-1 space-y-1.5 items-center justify-center text-center">
             <Avatar className="size-32 sm:size-44">
@@ -34,7 +34,7 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      <section id="about">
+      <section>
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
           <h2 className="text-xl font-bold">About</h2>
         </BlurFade>
@@ -48,7 +48,7 @@ export function HomePage() {
           </div>
         </BlurFade>
       </section>
-      <section id="charts">
+      <section>
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
             <h2 className="text-xl font-bold">Explore our data</h2>
